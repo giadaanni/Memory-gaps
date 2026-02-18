@@ -15,19 +15,23 @@ html,body{
   width:100%;height:100%;
   overflow:hidden;
   background:#000;
-  display:flex;justify-content:center;align-items:flex-start;
+  display:flex;justify-content:center;align-items:center;
   font-family:var(--fu);-webkit-tap-highlight-color:transparent;
   touch-action:manipulation;user-select:none}
 #app{
-  /* 2:3 ratio capped at 430px wide, full available height */
-  width:min(100vw, calc(100vh * 2/3), 430px);
-  height:min(100vh, calc(100vw * 3/2));
-  max-width:430px;
-  max-height:100vh;
+  /* 2:3 ratio: height fills viewport, width = height*2/3 */
+  height:100vh;
+  width:calc(100vh * 2 / 3);
+  /* But if viewport is wider than tall (landscape), limit differently */
+  max-width:100vw;
+  max-height:calc(100vw * 3 / 2);
+  /* Never exceed 430px wide */
+  /* Compute final: min(calc(100vh*2/3), 100vw, 430px) */
   position:relative;overflow:hidden;background:#0a0a0a;
-  flex-shrink:0;}
+  flex-shrink:0;
+}
 .screen{position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
+  align-items:center;justify-content:flex-start;
   opacity:0;pointer-events:none;transition:opacity .4s ease;overflow:hidden}
 .screen.active{opacity:1;pointer-events:all}
 
@@ -65,13 +69,14 @@ html,body{
 .s-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
   border-radius:10px;display:flex;align-items:center;justify-content:center}
 .s-back{background:linear-gradient(135deg,#1a0a3a,#0d0520);
-  border:1px solid rgba(255,255,255,.12)}
+  border:1px solid rgba(255,255,255,.12);overflow:hidden}
 .s-back::before{content:'';position:absolute;inset:1px;border-radius:9px;
   background:repeating-linear-gradient(45deg,transparent,transparent 4px,
     rgba(255,255,255,.025) 4px,rgba(255,255,255,.025) 5px)}
-.s-back img{width:86%;height:86%;object-fit:contain;opacity:.85;position:relative;z-index:1}
+.s-back img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:.85;z-index:1;
+  filter:brightness(0) saturate(100%) invert(70%) sepia(60%) saturate(300%) hue-rotate(230deg)}
 .s-front{transform:rotateY(180deg);font-size:42px;
-  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+  background:linear-gradient(135deg,#0d0520,#1a0535);border:1px solid rgba(255,255,255,.15)}
 .tap{position:relative;z-index:2;font-family:var(--fh);font-size:11px;letter-spacing:5px;
   color:rgba(255,255,255,.55);text-transform:uppercase;animation:blink 1.5s ease-in-out infinite;
   margin-top:8px}
@@ -88,31 +93,33 @@ html,body{
 
 /* ── MENUS ─────────────────────────────────────────────── */
 .mwrap{position:relative;z-index:2;display:flex;flex-direction:column;
-  align-items:center;gap:13px;padding:32px 24px;width:100%}
-.mttl{font-family:var(--fd);font-size:clamp(32px,9vw,46px);letter-spacing:4px;color:#fff;
+  align-items:center;gap:8px;padding:14px 20px;width:100%;
+  height:100%;justify-content:center;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}
+.mttl{font-family:var(--fd);font-size:clamp(24px,7vw,38px);letter-spacing:3px;color:#fff;
   text-align:center;line-height:.95}
-.msub{font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.36);
-  text-transform:uppercase;margin-top:-5px}
-.mbtn{width:100%;max-width:272px;padding:15px 16px;border:none;border-radius:12px;
-  font-family:var(--fu);font-size:14px;font-weight:600;letter-spacing:.4px;
+.msub{font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.36);
+  text-transform:uppercase;margin-top:-4px}
+.mbtn{width:100%;max-width:272px;padding:11px 16px;border:none;border-radius:12px;
+  font-family:var(--fu);font-size:13px;font-weight:600;letter-spacing:.4px;
   cursor:pointer;position:relative;overflow:hidden;transition:transform .15s ease}
 .mbtn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.12);
   opacity:0;transition:opacity .15s}
 .mbtn:active{transform:scale(.96)}.mbtn:active::after{opacity:1}
 .bl{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;
   display:flex;align-items:center;gap:12px;justify-content:center}
-.bl .flag{font-size:22px}
+.bl .flag{font-size:20px}
 .bp{background:linear-gradient(135deg,#5a28e0,#2e7de8);color:#fff;
-  box-shadow:0 8px 24px rgba(90,40,224,.4)}
+  box-shadow:0 6px 18px rgba(90,40,224,.4)}
 .br{background:linear-gradient(135deg,#d42f5a,#e86c2e);color:#fff;
-  box-shadow:0 8px 24px rgba(212,47,90,.3)}
+  box-shadow:0 6px 18px rgba(212,47,90,.3)}
 .bg{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
   color:#fff;font-size:12px}
-.mopt{width:100%;max-width:272px;padding:13px 15px;border:1px solid rgba(255,255,255,.11);
+.mopt{width:100%;max-width:272px;padding:10px 14px;border:1px solid rgba(255,255,255,.11);
   border-radius:11px;background:rgba(255,255,255,.05);color:#fff;font-family:var(--fu);
-  font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:9px;transition:background .15s}
+  font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:9px;transition:background .15s}
 .mopt:active{background:rgba(255,255,255,.13)}
-.mico{font-size:19px;flex-shrink:0}
+.mico{font-size:18px;flex-shrink:0}
 
 /* ── GAME SCREEN ───────────────────────────────────────── */
 #sg{flex-direction:column;justify-content:flex-start;overflow:hidden}
@@ -175,12 +182,12 @@ html,body{
 /* ── GRID ──────────────────────────────────────────────── */
 #card-grid{flex:1;display:grid;padding:4px 6px 6px;gap:3px;
   width:100%;min-height:0;position:relative;z-index:1;
-  pointer-events:auto;align-content:start;}
+  pointer-events:auto;}
 
 /* ── CARD ──────────────────────────────────────────────── */
-.card{aspect-ratio:1;perspective:650px;cursor:pointer;position:relative;min-width:0;min-height:0;}
+.card{perspective:650px;cursor:pointer;position:relative;min-width:0;min-height:0;}
 .ci{width:100%;height:100%;position:relative;transform-style:preserve-3d;
-  border-radius:var(--cr);transition:transform var(--flip) cubic-bezier(.4,0,.2,1)}
+  border-radius:var(--cr);transition:transform var(--flip) cubic-bezier(.4,0,.2,1);}
 .card.flipped .ci,.card.matched .ci{transform:rotateY(180deg)}
 .cface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
   border-radius:var(--cr);display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -306,14 +313,14 @@ canvas#bc{display:block;margin:0 auto 4px}
 .pkfill{height:100%;background:linear-gradient(90deg,#44ff88,#44ddff);width:100%}
 
 /* arcade level list */
-.lvrow{display:flex;align-items:center;gap:8px;padding:8px 11px;border-radius:8px;
+.lvrow{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;
   border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);
   width:100%;max-width:272px}
 .lvrow.lkd{opacity:.35;border-color:rgba(255,255,255,.04)}
 /* bonus toggle */
 .bonus-toggle-wrap{display:flex;align-items:center;justify-content:space-between;
-  width:100%;max-width:272px;padding:10px 14px;border-radius:11px;
-  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);margin-bottom:4px}
+  width:100%;max-width:272px;padding:8px 12px;border-radius:11px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);margin-bottom:0}
 .bonus-toggle-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.5px}
 .bonus-toggle-label span{font-size:10px;letter-spacing:2px;text-transform:uppercase;
   display:block;color:rgba(255,255,255,.35);margin-top:1px}
@@ -412,7 +419,7 @@ canvas#bc{display:block;margin:0 auto 4px}
         <span class="tgl-slider"></span>
       </label>
     </div>
-    <div id="arclist" style="display:flex;flex-direction:column;gap:6px;width:100%;max-width:272px;margin-bottom:10px"></div>
+    <div id="arclist" style="display:flex;flex-direction:column;gap:4px;width:100%;max-width:272px;margin-bottom:6px"></div>
     <button class="mbtn bp" onclick="startArcade()" id="barc" style="max-width:210px">▶ START</button>
     <button class="mbtn bg" onclick="showScreen('sm')" id="baback" style="max-width:210px">← BACK</button>
   </div>
@@ -1610,7 +1617,7 @@ function updateBars(){
 // ── GAME START ────────────────────────────────────────────
 function startGame(lv){
   G.lv=lv;G.cards=[];G.flip=[];
-  G.matched=0;G.total=(lv.cols*lv.rows)/2;
+  G.matched=0;G.total=(lv.cols*lv.rows)/2;  // will be recalculated in buildGrid for MP
   G.score=0;G.errors=0;G.timer=0;
   G.mc=0;G.bc=[0,0];G.streakOk=0;
   G.locked=false;G.hintIds=[];G.extraTry=false;
@@ -1701,9 +1708,18 @@ function updateTBan(){
 // ── GRID ──────────────────────────────────────────────────
 function buildGrid(sk){
   const lv=G.lv;
+  // In MP mode, sk has the overridden cols/rows from grid selection
+  const cols=sk.cols||lv.cols;
+  const rows=sk.rows||lv.rows;
+  // Also fix G.total to match the actual grid
+  G.total=(cols*rows)/2;
   const grid=document.getElementById('card-grid');
-  grid.style.gridTemplateColumns=`repeat(${lv.cols},1fr)`;
-  grid.style.gridTemplateRows=`repeat(${lv.rows},1fr)`;
+  grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+  grid.style.gridTemplateRows=`repeat(${rows},1fr)`;
+  // Adaptive gap: reduce for large grids to avoid overlap
+  const totalCells=cols*rows;
+  const adaptiveGap=totalCells<=24?3:totalCells<=36?1:0;
+  grid.style.gap=adaptiveGap+'px';
   grid.innerHTML='';G.cards=[];
   const pairs=[];
   for(let i=0;i<G.total;i++){const e=lv.em[i%lv.em.length];pairs.push(e,e)}
