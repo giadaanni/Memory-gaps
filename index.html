@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Memory Gaps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;600&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--w:min(100vw,430px);--h:100dvh;--cr:8px;--flip:.42s}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;display:flex;justify-content:center;align-items:center;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent;touch-action:manipulation;user-select:none}
+#app{width:var(--w);height:var(--h);position:relative;overflow:hidden;background:#0a0a0a}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s ease;overflow:hidden}
+.screen.active{opacity:1;pointer-events:all}
+#ss{background:#000;cursor:pointer}
+#ss-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 36%,#1a0a2e,#000 70%)}
+.s-logo{position:relative;z-index:2;text-align:center;margin-bottom:28px}
+.s-t{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,14vw,72px);letter-spacing:6px;color:#fff;line-height:.88;text-shadow:0 0 40px rgba(160,100,255,.5)}
+.s-sub{font-family:'DM Sans',sans-serif;font-size:10px;letter-spacing:7px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-top:10px}
+.tap{position:relative;z-index:2;font-family:'Orbitron',monospace;font-size:11px;letter-spacing:5px;color:rgba(255,255,255,.5);text-transform:uppercase;animation:blink 1.5s ease-in-out infinite;margin-top:20px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.08}}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="ss" class="screen active">
+  <div id="ss-bg"></div>
+  <div class="s-logo">
+    <div class="s-t">MEMORY<br>GAPS</div>
+    <div class="s-sub">Card Matching Game</div>
+  </div>
+  <div class="tap">TAP ANYWHERE TO START</div>
+</div>
+</div>
+<script>
+console.log('SCRIPT LOADED');
+document.getElementById('ss').addEventListener('click', function() {
+  console.log('SPLASH CLICKED!');
+  alert('Click works! Full game loading...');
+});
+</script>
+</body>
+</html>
